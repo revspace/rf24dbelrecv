@@ -22,15 +22,15 @@ void beep(int n) {
     }
 }
 
-boolean shine = false;
-void ping() {
-    if (shine) {
+boolean heartbeat_on = false;
+void heartbeat() {
+    if (heartbeat_on) {
         digitalWrite(2, HIGH);
     }
     else {
         digitalWrite(2, LOW);
     }
-    shine = !shine;
+    heartbeat_on = !heartbeat_on;
 }
 
 void setup() {
@@ -38,7 +38,7 @@ void setup() {
     beep(3);
     delay(2000);  // lang, want condensator.
     
-    pinMode(2, OUTPUT);  // for liveness
+    pinMode(2, OUTPUT);  // for heartbeat
     digitalWrite(2, LOW);
 
     rf.begin();
@@ -68,9 +68,9 @@ void loop() {
 
     delay(50);
     progress++;
-    if(progress >= 5) {
+    if(progress >= 20) {
       progress = 0;
-      ping();
+      heartbeat();
     }
 
     if (( (long) millis() - starttime) > 500) {
@@ -117,8 +117,6 @@ void loop() {
                 beep(open ? 2 : 1);
             }
         }
-    }
-    else {
     }
 }
 
