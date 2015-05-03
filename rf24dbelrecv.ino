@@ -12,6 +12,7 @@ RF24 rf(/*ce*/ 8, /*cs*/ 10);
 
 int open = -1;
 
+
 void beep(int n) {
     while (n--) {
         digitalWrite(4, HIGH);
@@ -21,13 +22,24 @@ void beep(int n) {
     }
 }
 
+boolean shine = false;
+void ping() {
+    if (shine) {
+        digitalWrite(2, HIGH);
+    }
+    else {
+        digitalWrite(2, LOW);
+    }
+    shine = !shine;
+}
+
 void setup() {
     pinMode(4, OUTPUT);
     beep(3);
-    pinMode(7, OUTPUT);  // LDO for nRF
-    digitalWrite(7, LOW);
     delay(2000);  // lang, want condensator.
-    digitalWrite(7, HIGH);
+    
+    pinMode(2, OUTPUT);  // for liveness
+    digitalWrite(2, LOW);
 
     rf.begin();
 
@@ -45,6 +57,7 @@ void setup() {
 
 long extra = 600;
 long ignore = 2000;
+int progress = 0;
 
 void loop() {
     static signed long stoptime = 0;
@@ -54,6 +67,7 @@ void loop() {
     static signed long starttime = 0;
 
     delay(50);
+    progress++;
 
     if (( (long) millis() - starttime) > 500) {
         starttime = 0;
@@ -99,6 +113,12 @@ void loop() {
                 beep(open ? 2 : 1);
             }
         }
+    }
+    else {
+      if(progress >= 10) {
+        progress = 0;
+        ping();
+      }
     }
 }
 
