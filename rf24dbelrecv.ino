@@ -68,6 +68,10 @@ void loop() {
 
     delay(50);
     progress++;
+    if(progress >= 5) {
+      progress = 0;
+      ping();
+    }
 
     if (( (long) millis() - starttime) > 500) {
         starttime = 0;
@@ -115,10 +119,6 @@ void loop() {
         }
     }
     else {
-      if(progress >= 10) {
-        progress = 0;
-        ping();
-      }
     }
 }
 
