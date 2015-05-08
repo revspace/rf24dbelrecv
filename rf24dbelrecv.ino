@@ -65,10 +65,11 @@ void loop() {
     static int counter;
 
     static signed long starttime = 0;
+    static int wtf = 0;
 
     delay(50);
     progress++;
-    if(progress >= 5) {
+    if(progress >= 20) {
       progress = 0;
       ping();
     }
@@ -87,9 +88,14 @@ void loop() {
         memset(&buf, 0, sizeof(buf));
         rf.read(&buf, sizeof(buf));
 
+        // Niet ons protocol, vriend!
+        if (buf[0] > (payload - 1)) return;
+        if (buf[0] < 4) return;
+        for (int idx = 1; idx <= 4; idx++)
+            if (buf[idx] < '!' || buf[idx] > '~') return;
+
         wdt_reset();
 
-        if (buf[0] > (payload - 1)) return;
         buf[ (int) buf[0] + 1 ] = '\0';
 
         Serial.print(millis());
@@ -117,8 +123,6 @@ void loop() {
                 beep(open ? 2 : 1);
             }
         }
-    }
-    else {
     }
 }
 
